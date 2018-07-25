@@ -1,9 +1,20 @@
 package tw.gltc.shpng.dto;
 
+import java.math.BigDecimal;
+
 public class ItemDTO {
 
 	private String itemName;
-	private int itemUnitPrice;
+	private BigDecimal itemUnitPrice;
+	
+	public ItemDTO() {
+	
+	}
+	
+	public ItemDTO(String itmName, BigDecimal itmUnitPrice) {
+		itemName = itmName;
+		itemUnitPrice = itmUnitPrice;
+	}
 	
 	public String getItemName() {
 		return itemName;
@@ -11,10 +22,10 @@ public class ItemDTO {
 	public void setItemName(String itemName) {
 		this.itemName = itemName;
 	}
-	public int getItemUnitPrice() {
+	public BigDecimal getItemUnitPrice() {
 		return itemUnitPrice;
 	}
-	public void setItemUnitPrice(int itemUnitPrice) {
+	public void setItemUnitValue(BigDecimal itemUnitPrice) {
 		this.itemUnitPrice = itemUnitPrice;
 	}
 	

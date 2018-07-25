@@ -1,4 +1,4 @@
-package tw.gltc.shpng.config;
+package tw.gltc.shpng.ref;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
+import tw.gltc.shpng.dto.ItemDTO;
 import tw.gltc.shpng.exception.ItemException;
 
 /**
@@ -27,15 +28,31 @@ import tw.gltc.shpng.exception.ItemException;
  * @author vkini
  *
  */
-public class ItemSource {
+public class ItemRef {
 
-	private static List<String> itemNames;
-	private static Map<String, BigDecimal> itemValues = new HashMap<>(); //TODO change it to hold item DTOs
+	private List<String> itemNames;
+	private Map<String, ItemDTO> itemValues = new HashMap<>();
+	private static ItemRef itmRef;
 	
-	public static void init() throws ItemException {
+	private ItemRef() {
+		try {
+			init();
+		} catch (ItemException e) {
+			System.out.println("Cannot create itemRef");
+		}
+	}
+	
+	public static ItemRef getInstance() {
+		if(itmRef == null) {
+			itmRef = new ItemRef();
+		};
+		return itmRef;
+	}
+	
+	private void init() throws ItemException {
 		Properties props = new Properties();
 		try {
-			props.load(new FileInputStream(new File("itemSrc.properties")));
+			props.load(new FileInputStream(new File("items.properties")));
 			itemNames = new ArrayList<>();
 			itemNames.addAll(Arrays.asList(props.getProperty("item.names").trim().toUpperCase().split("\\s*,\\s*")));	
 			System.out.println("Item init complete");
@@ -49,17 +66,17 @@ public class ItemSource {
 	}
 	
 	
-	public static boolean checkItemExists(String item) throws ItemException {
-		if (itemNames == null) {
-			init();
-		}
-		
+	public ItemDTO getItem(String item) throws ItemException {
+		return itemValues.get(item.toUpperCase());
+	}
+	
+	public boolean containsItem(String item) throws ItemException {
 		return itemNames.contains(item.toUpperCase());
 	}
 	
-	public static void updateItemValues(Map<String, BigDecimal> itemVals) throws ItemException {
+	public void updateItemValues(Map<String, BigDecimal> itemVals) throws ItemException {
 		for (Map.Entry<String, BigDecimal> entry : itemVals.entrySet()) {
-			if (checkItemExists(entry.getKey())) {
+			if (itemNames.contains(entry.getKey())) {
 				updateItemValue(entry.getKey(), entry.getValue());
 			} else {
 				throw new ItemException("Item " + entry.getKey() + " not found ");
@@ -68,23 +85,34 @@ public class ItemSource {
 		
 	}
 	
-	public static void updateItemValue(String item, BigDecimal itemValue) throws ItemException {
-		itemValues.put(item, itemValue);
+	public void updateItemValue(String itemName, BigDecimal itemValue) throws ItemException {
+		itemValues.put(itemName.toUpperCase(), new ItemDTO(itemName.toUpperCase(), itemValue));
 	}
 	
-	public static BigDecimal  getItemValue(String item) throws ItemException {
-		BigDecimal output = checkItemExists(item) ? itemValues.get(item) : new BigDecimal(0) ;
-		return output;
+	public void updateItemValue(String itemName, ItemDTO item) throws ItemException {
+		itemValues.put(itemName.toUpperCase(), item);
+	}
+	
+	public BigDecimal getItemValue(String item) throws ItemException {
+		BigDecimal itemValue = itemValues.get(item) != null ? itemValues.get(item).getItemUnitPrice() : new BigDecimal(0);
+		return itemValue;
 	}
 	
 	
+	public List<String> getItemNames() {
+		return itemNames;
+	}
+
+	public Map<String, ItemDTO> getItemValues() {
+		return itemValues;
+	}
+
+	public ItemRef getItmRef() {
+		return itmRef;
+	}
+
 	public static void main(String [] args) {
-		try {
-			ItemSource.init();
-			System.out.println(itemNames);
-		} catch (ItemException e) {
-			e.printStackTrace();
-		}
-		
+		ItemRef itmRf = new ItemRef();
+		System.out.println(itmRf.getItemNames());
 	}
 }

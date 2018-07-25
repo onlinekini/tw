@@ -2,24 +2,20 @@ package tw.gltc.test;
 
 import org.junit.BeforeClass;
 
-import tw.gltc.shpng.config.ItemSource;
-import tw.gltc.shpng.config.NumericToMathSource;
-import tw.gltc.shpng.exception.ConversionException;
-import tw.gltc.shpng.exception.ItemException;
+import tw.gltc.shpng.ref.ItemRef;
+import tw.gltc.shpng.ref.SymbolRef;
 
 public class GalacticShoppingTest {
 
+	SymbolRef symRef;
+	ItemRef itmRef;
+	
 	@BeforeClass
 	public void initAll() {
-		try {
-			ItemSource.init();
-			NumericToMathSource.init();
-			
-		} catch (ItemException e) {
-			e.printStackTrace();
-		} catch (ConversionException e) {
-			e.printStackTrace();
-		}
+		symRef = SymbolRef.getInstance();
+		itmRef = ItemRef.getInstance();
 	}
+	
+	
 
 }
