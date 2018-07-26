@@ -22,7 +22,7 @@ public class SymbolRef {
 
 	private Map<String, Integer> symbolConversionValues;
 	private static SymbolRef symbolRef;
-	private static Map<String, Integer> romanNumerals; // Java 9 
+	private static Map<String, Integer> romanNumerals;
 	
 
 	private SymbolRef() {
@@ -32,7 +32,6 @@ public class SymbolRef {
 		romanNumerals.put("V",  5);
 		romanNumerals.put("X", 10);
 		romanNumerals.put("L", 50);
-		romanNumerals.put("I", 1);
 		romanNumerals.put("C", 100);
 		romanNumerals.put("D", 500);
 		romanNumerals.put("M", 1000); // setup
@@ -47,15 +46,15 @@ public class SymbolRef {
 		symbolConversionValues = symbolValues;
 	}
 	
-	public void manualInit(String symbolName, String symbolValue) {
-		symbolConversionValues.put(symbolName, romanNumerals.get(symbolValue));
+	public void manualInit(String symbolName, String romanNumeral) {
+		symbolConversionValues.put(symbolName, romanNumerals.get(romanNumeral));
 	}
 	
 	
 	public Integer getNumericEquivalent(String currencySymbol) throws ConversionException {
 		Integer val = symbolConversionValues.get(currencySymbol);
 		if (val == null) {
-			throw new ConversionException("I have no idea what you are talking about " + currencySymbol);
+			throw new ConversionException("I have no idea what you are talking about: " + currencySymbol);
 		}
 		
 		return new Integer(val);

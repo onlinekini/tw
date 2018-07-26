@@ -1,6 +1,6 @@
 package tw.gltc.shpng.exception;
 
-public class ConversionException extends  Exception {
+public class ConversionException extends  RuntimeException {
 			
 	private static final long serialVersionUID = -6674980959143400518L;
 

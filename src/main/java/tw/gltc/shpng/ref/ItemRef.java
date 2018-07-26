@@ -55,7 +55,7 @@ public class ItemRef {
 			props.load(new FileInputStream(new File("items.properties")));
 			itemNames = new ArrayList<>();
 			itemNames.addAll(Arrays.asList(props.getProperty("item.names").trim().toUpperCase().split("\\s*,\\s*")));	
-			System.out.println("Item init complete");
+			//System.out.println("Item init complete");
 		} catch (FileNotFoundException e) {
 			System.out.println(" File Not found : I cannot identify the source, hence cannot convert to human decimal numbers");
 			throw new ItemException("File not found, cannot start without that" , e);
@@ -86,6 +86,7 @@ public class ItemRef {
 	}
 	
 	public void updateItemValue(String itemName, BigDecimal itemValue) throws ItemException {
+		itemNames.add(itemName.toUpperCase());
 		itemValues.put(itemName.toUpperCase(), new ItemDTO(itemName.toUpperCase(), itemValue));
 	}
 	

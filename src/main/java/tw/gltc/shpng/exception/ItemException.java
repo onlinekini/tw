@@ -1,6 +1,6 @@
 package tw.gltc.shpng.exception;
 
-public class ItemException extends  Exception {
+public class ItemException extends  RuntimeException {
 			
 	private static final long serialVersionUID = -6674980959143400518L;
 

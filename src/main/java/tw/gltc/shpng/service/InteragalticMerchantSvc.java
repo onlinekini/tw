@@ -14,6 +14,22 @@ import tw.gltc.shpng.exception.ItemException;
 import tw.gltc.shpng.ref.ItemRef;
 import tw.gltc.shpng.ref.SymbolRef;
 
+/**
+ * This class is a helper to test the input from the Input.test file 
+ * All the test cases which were provided in the requirement have been saved there.
+ * 
+ * This simply parses the input file and processes the line to idenfy if it is ... 
+ * <ul>
+ *   <li>symbol reference - source</li>
+ *   <li>item reference - geting unit price of an item</li>
+ *   <li>test conditions - Whatever the merchant wants to convert</li>
+ *	</ul>
+ *
+ *	This class does not have a test case.
+ * 
+ * @author vkini
+ *
+ */
 public class InteragalticMerchantSvc {
 
 	private ItemValueComputer itemValueComputer;
@@ -22,7 +38,7 @@ public class InteragalticMerchantSvc {
 	private SymbolToNumberConverter symbolToNumConverter;
 
 	public InteragalticMerchantSvc() {
-		File inputFile = new File("Source.txt");
+		File inputFile = new File("Input.test");
 		itmRef = ItemRef.getInstance();
 		symblRef = SymbolRef.getInstance();
 		symbolToNumConverter = new SymbolToNumberConverter(symblRef);
@@ -85,9 +101,5 @@ public class InteragalticMerchantSvc {
 			}
 		}
 
-	}
-
-	public static void main(String[] args) {
-		InteragalticMerchantSvc svc = new InteragalticMerchantSvc();
 	}
 }
