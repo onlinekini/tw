@@ -38,3 +38,5 @@ Program is all or none. if one of the input fails with a runtimeexception, all f
 #Assumption 7
 Comments should start with #, but lines should have comments after valid information, else it would fail in parsing with garbage output
 
+#Assumption 8
+Did not check Wikipedia reference for roman nueral computation. if there are more conditions in Wiki, I will work on them over the next two days and submit.
