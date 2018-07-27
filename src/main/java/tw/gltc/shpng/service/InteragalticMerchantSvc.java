@@ -11,8 +11,10 @@ import tw.gltc.shpng.dto.ItemDTO;
 import tw.gltc.shpng.dto.RequestDTO;
 import tw.gltc.shpng.exception.ConversionException;
 import tw.gltc.shpng.exception.ItemException;
-import tw.gltc.shpng.ref.ItemRef;
-import tw.gltc.shpng.ref.SymbolRef;
+import tw.gltc.shpng.ref.item.ItemFactory;
+import tw.gltc.shpng.ref.item.ItemRefIfc;
+import tw.gltc.shpng.ref.symbol.SymbolFactory;
+import tw.gltc.shpng.ref.symbol.SymbolRefIfc;
 
 /**
  * This class is a helper to test the input from the Input.test file 
@@ -33,24 +35,29 @@ import tw.gltc.shpng.ref.SymbolRef;
 public class InteragalticMerchantSvc {
 
 	private ItemValueComputer itemValueComputer;
-	private ItemRef itmRef;
-	private SymbolRef symblRef;
+	private ItemRefIfc itmRef;
+	private SymbolRefIfc symblRef;
 	private SymbolToNumberConverter symbolToNumConverter;
 
 	public InteragalticMerchantSvc() {
-		File inputFile = new File("Input.test");
-		itmRef = ItemRef.getInstance();
-		symblRef = SymbolRef.getInstance();
+		itmRef = ItemFactory.getItem(ItemFactory.GALACTIC_ITEM_SRC_NAME);
+		symblRef = SymbolFactory.getSymbolsFor(SymbolFactory.GALACTIC_SYMBOL_TYPE);
 		symbolToNumConverter = new SymbolToNumberConverter(symblRef);
 		itemValueComputer = new ItemValueComputer(symbolToNumConverter, itmRef);
+	}
+
+	public void processInput() {
+
+		File inputFile = new File("Input.test");
+		
 		ItemDTO itmDTO = null;
 		RequestDTO request = null;
 		BufferedReader rdr = null;
 		boolean isItemsetup = false;
 		boolean isQuestion = false;
-		
+
 		String input = null;
-		
+
 		try {
 			rdr = new BufferedReader(new FileReader(inputFile));
 			while ((input = rdr.readLine()) != null) {
@@ -73,7 +80,7 @@ public class InteragalticMerchantSvc {
 						//System.out.println(" Computed Item String = " + input.substring(0, input.indexOf(" is ")).trim());
 						//System.out.println(" Computed value = " + input.substring(input.indexOf("is")+2, input.indexOf("Credit")).trim());
 						itmDTO = itemValueComputer.calculateItemValue(input.substring(0, input.indexOf(" is ")).trim(), new BigDecimal(input.substring(input.indexOf(" is ") + 4, input.indexOf("Credit")).trim()));
-						itmRef.updateItemValue(itmDTO.getItemName(), itmDTO);
+						itmRef.updateItemValue(itmDTO);
 						//System.out.println();
 					} else { //  // Neither a question or an item info, surely setup info
 						//System.out.println(" Processing symbol String = " + Arrays.toString(input.trim().split("\\s*,\\s*")));
@@ -100,6 +107,7 @@ public class InteragalticMerchantSvc {
 				}
 			}
 		}
+
 
 	}
 }

@@ -9,10 +9,13 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
+import tw.gltc.shpng.dto.ItemDTO;
 import tw.gltc.shpng.dto.RequestDTO;
 import tw.gltc.shpng.exception.ConversionException;
-import tw.gltc.shpng.ref.ItemRef;
-import tw.gltc.shpng.ref.SymbolRef;
+import tw.gltc.shpng.ref.item.ItemFactory;
+import tw.gltc.shpng.ref.item.ItemRefIfc;
+import tw.gltc.shpng.ref.symbol.SymbolFactory;
+import tw.gltc.shpng.ref.symbol.SymbolRefIfc;
 import tw.gltc.shpng.service.ItemValueComputer;
 import tw.gltc.shpng.service.SymbolToNumberConverter;
 
@@ -25,8 +28,8 @@ public class ItemValueCompuerTest {
 
 	@BeforeClass
 	public static void initAll() {
-		SymbolRef symRef = SymbolRef.getInstance();
-		ItemRef itmRef = ItemRef.getInstance();
+		SymbolRefIfc symRef = SymbolFactory.getSymbolsFor(SymbolFactory.GALACTIC_SYMBOL_TYPE);
+		ItemRefIfc itmRef = ItemFactory.getItem(ItemFactory.GALACTIC_ITEM_SRC_NAME);
 		symRef.manualInit("glob", "I");
 		symRef.manualInit("prok", "V");
 		symRef.manualInit("pish", "X");
@@ -64,6 +67,13 @@ public class ItemValueCompuerTest {
 	
 	@Test
 	public void testGetTotalValueWithItemNeg() { // With item and lots pof spaces before after and middle
+		ItemDTO  itemDTO = new ItemDTO("SILVER", new BigDecimal(17));
+		
+		assertEquals(itemDTO, itemValueComputer.calculateItemValue("glob glob Silver", new BigDecimal(34)));
+	}
+	
+	@Test
+	public void testCalcItemValue() { // With check if the unit price is being set
 		RequestDTO reqDTO = new RequestDTO();
 		reqDTO.setHasItem(true);
 		reqDTO.setOriginalRequest("   glob glob      Gold   ");

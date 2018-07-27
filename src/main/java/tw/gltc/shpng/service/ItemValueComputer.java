@@ -6,12 +6,13 @@ import java.util.Arrays;
 import tw.gltc.shpng.dto.ItemDTO;
 import tw.gltc.shpng.dto.RequestDTO;
 import tw.gltc.shpng.exception.ConversionException;
-import tw.gltc.shpng.ref.ItemRef;
+import tw.gltc.shpng.ref.item.GalacticItemRef;
+import tw.gltc.shpng.ref.item.ItemRefIfc;
 
 /**
  * This class does the computation of a "requirement" into a value. provided the requirments have valid symbols and items
  * 
- * Uses {@link ItemRef} as the source of all item information
+ * Uses {@link GalacticItemRef} as the source of all item information
  * Uses {@link SymbolToNumberConverter} to convert symbols to numeric values
  * These are constructor arguments.
  *  
@@ -21,7 +22,7 @@ import tw.gltc.shpng.ref.ItemRef;
 public class ItemValueComputer {
 
 	private SymbolToNumberConverter symbolConverter = null;
-	private ItemRef itmRef = null;
+	private ItemRefIfc itmRef = null;
 	
 	/**
 	 * Constructor
@@ -29,7 +30,7 @@ public class ItemValueComputer {
 	 * @param symbolNumConverter {@link SymbolToNumberConverter}
 	 * @param itmRef {@link SymbolToNumberConverter}
 	 */
-	public ItemValueComputer (SymbolToNumberConverter symbolNumConverter, ItemRef itmRef) {
+	public ItemValueComputer (SymbolToNumberConverter symbolNumConverter, ItemRefIfc itmRef) {
 		this.symbolConverter = symbolNumConverter;
 		this.itmRef = itmRef;
 	}
@@ -80,12 +81,10 @@ public class ItemValueComputer {
 		ItemDTO itemDto = null;
 		if (symbolsWithItemAtEnd != null) {
 			String[] symbolArray = symbolsWithItemAtEnd.split("\\s* \\s*");
-			if (itmRef.containsItem(symbolArray[symbolArray.length -1])) {
-				itemDto = new ItemDTO();
-				itemDto.setItemName(symbolArray[symbolArray.length -1]);
+			if (itmRef.containsItem(symbolArray[symbolArray.length -1].toUpperCase())) {
 				int mathematicalValue = symbolConverter.convertToNumber(Arrays.copyOf(symbolArray, symbolArray.length -1));
 				BigDecimal itemValue = totalValue.divide(new BigDecimal(mathematicalValue));
-				itemDto.setItemUnitValue(itemValue);	
+				itemDto = new ItemDTO(symbolArray[symbolArray.length -1].toUpperCase(), itemValue);
 			} else {
 				return null;
 			}

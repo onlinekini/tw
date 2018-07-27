@@ -1,7 +1,10 @@
 package tw.gltc.shpng.service;
 
+import java.util.Arrays;
+
 import tw.gltc.shpng.exception.ConversionException;
-import tw.gltc.shpng.ref.SymbolRef;
+import tw.gltc.shpng.ref.symbol.SymbolFactory;
+import tw.gltc.shpng.ref.symbol.SymbolRefIfc;
 
 /**
  * This class does the computation from symbols to methemacitcal value. Provided the requirments have valid symbols
@@ -13,9 +16,9 @@ import tw.gltc.shpng.ref.SymbolRef;
  */
 public class SymbolToNumberConverter {
 	
-	private SymbolRef symbolRef;
+	private SymbolRefIfc symbolRef;
 	
-	public SymbolToNumberConverter(SymbolRef symRef) {
+	public SymbolToNumberConverter(SymbolRefIfc symRef) {
 		symbolRef = symRef;
 	}
 
@@ -60,22 +63,24 @@ public class SymbolToNumberConverter {
 				if (prev == 0) {
 					// Add the mathematical Equivalent value to the final value
 					finalNumericValue = curr;
+					repeatCount ++;
 				} else {
-					if (repeatCount < 3) { // 0, 1, 2
-						if (prev > curr) {
-							if (isValidSubtraction(prev, curr)) {
-								repeatCount = 0;
-								finalNumericValue -= curr;
-							}
-						} else if (prev == curr) {
-							finalNumericValue += curr;
-							repeatCount ++;
-						} else { // Now if previous is more, check for subtraction rules - hence validate
-							finalNumericValue += curr;
+					//System.out.println(repeatCount);
+					if (prev > curr) {
+						if (isValidSubtraction(prev, curr)) {
 							repeatCount = 0;
+							finalNumericValue -= curr;
 						}
-					} else {
-						throw new ConversionException("illegal usage of neumerals in " + symbols[i]);
+					} else if (prev == curr) {
+						finalNumericValue += curr;
+						repeatCount ++;
+					} else { // Now if previous is more, check for subtraction rules - hence validate
+						finalNumericValue += curr;
+						repeatCount = 0;
+					}
+					 
+					 if (repeatCount > 3) {
+						throw new ConversionException("illegal usage of neumerals in " + Arrays.toString(symbols));
 					}
 				}
 				//System.out.println(finalNumericValue);
@@ -101,7 +106,7 @@ public class SymbolToNumberConverter {
 	 */
 	public static void main(String[] args) {
 		
-		SymbolToNumberConverter converter = new SymbolToNumberConverter(SymbolRef.getInstance());
+		SymbolToNumberConverter converter = new SymbolToNumberConverter(SymbolFactory.getSymbolsFor(SymbolFactory.GALACTIC_SYMBOL_TYPE));
 		converter.symbolRef.manualInit("I", "I");
 		converter.symbolRef.manualInit("V", "V");
 		converter.symbolRef.manualInit("X", "X");
@@ -112,5 +117,8 @@ public class SymbolToNumberConverter {
 		
 		System.out.println("MCMXLIV " + converter.convertToNumber("M C M X L I V "));
 		System.out.println("MCMIII " + converter.convertToNumber("M C M I I I"));
+		
+		System.out.println("IIII " + converter.convertToNumber("I I I"));
+		System.out.println("IIII " + converter.convertToNumber("I I I I"));
 	}
 }

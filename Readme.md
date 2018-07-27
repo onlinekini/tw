@@ -2,6 +2,7 @@
 # This project uses maven only for running the tests.
 # The jar created will not run from command line.
 # Tested only on eclipse. (though it should not matter)
+# Starting class for review is : IntergalacticMerchantSvc.java
 ###############
 
 # Notations

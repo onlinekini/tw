@@ -1,4 +1,4 @@
-package tw.gltc.shpng.ref;
+package tw.gltc.shpng.ref.item;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -28,13 +28,13 @@ import tw.gltc.shpng.exception.ItemException;
  * @author vkini
  *
  */
-public class ItemRef {
+public class GalacticItemRef implements ItemRefIfc {
 
 	private List<String> itemNames;
 	private Map<String, ItemDTO> itemValues = new HashMap<>();
-	private static ItemRef itmRef;
+	private static ItemRefIfc itmRef;
 	
-	private ItemRef() {
+	private GalacticItemRef() {
 		try {
 			init();
 		} catch (ItemException e) {
@@ -42,14 +42,14 @@ public class ItemRef {
 		}
 	}
 	
-	public static ItemRef getInstance() {
+	public static ItemRefIfc getInstance() {
 		if(itmRef == null) {
-			itmRef = new ItemRef();
+			itmRef = new GalacticItemRef();
 		};
 		return itmRef;
 	}
 	
-	private void init() throws ItemException {
+	private void init() {
 		Properties props = new Properties();
 		try {
 			props.load(new FileInputStream(new File("items.properties")));
@@ -57,24 +57,43 @@ public class ItemRef {
 			itemNames.addAll(Arrays.asList(props.getProperty("item.names").trim().toUpperCase().split("\\s*,\\s*")));	
 			//System.out.println("Item init complete");
 		} catch (FileNotFoundException e) {
-			System.out.println(" File Not found : I cannot identify the source, hence cannot convert to human decimal numbers");
-			throw new ItemException("File not found, cannot start without that" , e);
+			System.out.println(" File Not found : I cannot identify the items");
+			throw new ItemException("items.properties File not found, cannot start without that" , e);
 		} catch (IOException e) {
-			System.out.println(" Other IO Exception: I cannot identify the source, hence cannot convert to human decimal numbers");
-			throw new ItemException("Error reading source file, cannot start without that" , e);
+			System.out.println(" Cannot read file : I cannot identify the items");
+			throw new ItemException("Error reading source file items.properties, cannot start without that" , e);
 		}
 	}
 	
 	
-	public ItemDTO getItem(String item) throws ItemException {
-		return itemValues.get(item.toUpperCase());
+	/*
+	 * (non-Javadoc)
+	 * @see tw.gltc.shpng.ref.ItemRefIfc#getItem(java.lang.String)
+	 */
+	@Override
+	public ItemDTO getItem(String item) {
+		try {
+			return itemValues.containsKey(item.toUpperCase()) ? itemValues.get(item.toUpperCase()).clone() : null;
+		} catch (CloneNotSupportedException e) {
+			throw new ItemException("Unknown exception in cloning : ", e);
+		}
 	}
 	
-	public boolean containsItem(String item) throws ItemException {
+	/*
+	 * (non-Javadoc)
+	 * @see tw.gltc.shpng.ref.ItemRefIfc#containsItem(java.lang.String)
+	 */
+	@Override
+	public boolean containsItem(String item) {
 		return itemNames.contains(item.toUpperCase());
 	}
 	
-	public void updateItemValues(Map<String, BigDecimal> itemVals) throws ItemException {
+	/*
+	 * (non-Javadoc)
+	 * @see tw.gltc.shpng.ref.ItemRefIfc#updateItemValues(java.util.Map)
+	 */
+	@Override
+	public void updateItemValues(Map<String, BigDecimal> itemVals) {
 		for (Map.Entry<String, BigDecimal> entry : itemVals.entrySet()) {
 			if (itemNames.contains(entry.getKey())) {
 				updateItemValue(entry.getKey(), entry.getValue());
@@ -85,35 +104,47 @@ public class ItemRef {
 		
 	}
 	
-	public void updateItemValue(String itemName, BigDecimal itemValue) throws ItemException {
+	/*
+	 * (non-Javadoc)
+	 * @see tw.gltc.shpng.ref.ItemRefIfc#updateItemValue(java.lang.String, java.math.BigDecimal)
+	 */
+	@Override
+	public void updateItemValue(String itemName, BigDecimal unitPric) {
 		itemNames.add(itemName.toUpperCase());
-		itemValues.put(itemName.toUpperCase(), new ItemDTO(itemName.toUpperCase(), itemValue));
+		itemValues.put(itemName.toUpperCase(), new ItemDTO(itemName.toUpperCase(), unitPric));
 	}
 	
-	public void updateItemValue(String itemName, ItemDTO item) throws ItemException {
-		itemValues.put(itemName.toUpperCase(), item);
+	/*
+	 * (non-Javadoc)
+	 * @see tw.gltc.shpng.ref.ItemRefIfc#updateItemValue(java.lang.String, tw.gltc.shpng.dto.ItemDTO)
+	 */
+	@Override
+	public void updateItemValue(ItemDTO item) {
+		updateItemValue(item.getItemName(), item.getItemUnitPrice());
 	}
 	
-	public BigDecimal getItemValue(String item) throws ItemException {
+	/*
+	 * (non-Javadoc)
+	 * @see tw.gltc.shpng.ref.ItemRefIfc#getItemValue(java.lang.String)
+	 */
+	@Override
+	public BigDecimal getItemValue(String item) {
 		BigDecimal itemValue = itemValues.get(item) != null ? itemValues.get(item).getItemUnitPrice() : new BigDecimal(0);
 		return itemValue;
 	}
 	
 	
+	/*
+	 * (non-Javadoc)
+	 * @see tw.gltc.shpng.ref.ItemRefIfc#getItemNames()
+	 */
+	@Override
 	public List<String> getItemNames() {
 		return itemNames;
 	}
 
-	public Map<String, ItemDTO> getItemValues() {
-		return itemValues;
-	}
-
-	public ItemRef getItmRef() {
-		return itmRef;
-	}
-
 	public static void main(String [] args) {
-		ItemRef itmRf = new ItemRef();
+		GalacticItemRef itmRf = new GalacticItemRef();
 		System.out.println(itmRf.getItemNames());
 	}
 }

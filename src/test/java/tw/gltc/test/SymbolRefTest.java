@@ -8,18 +8,19 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
 import tw.gltc.shpng.exception.ConversionException;
-import tw.gltc.shpng.ref.SymbolRef;
+import tw.gltc.shpng.ref.symbol.SymbolFactory;
+import tw.gltc.shpng.ref.symbol.SymbolRefIfc;
 
 public class SymbolRefTest {
 
-	static SymbolRef symRef;
+	static SymbolRefIfc symRef;
 
 	@Rule
 	public ExpectedException exception = ExpectedException.none();
 
 	@BeforeClass
 	public static void initAll() {
-		symRef = SymbolRef.getInstance();
+		symRef = SymbolFactory.getSymbolsFor(SymbolFactory.GALACTIC_SYMBOL_TYPE);
 	}
 
 	@Test

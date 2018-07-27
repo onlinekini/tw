@@ -8,7 +8,8 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
 import tw.gltc.shpng.exception.ConversionException;
-import tw.gltc.shpng.ref.SymbolRef;
+import tw.gltc.shpng.ref.symbol.SymbolFactory;
+import tw.gltc.shpng.ref.symbol.SymbolRefIfc;
 import tw.gltc.shpng.service.SymbolToNumberConverter;
 
 public class SymbolConverterTest {
@@ -20,7 +21,7 @@ public class SymbolConverterTest {
 
 	@BeforeClass
 	public static void initAll() {
-		SymbolRef symRef = SymbolRef.getInstance();
+		SymbolRefIfc symRef = SymbolFactory.getSymbolsFor(SymbolFactory.GALACTIC_SYMBOL_TYPE);
 		symRef.manualInit("glob", "I");
 		symRef.manualInit("prok", "V");
 		symRef.manualInit("pish", "X");

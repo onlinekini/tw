@@ -12,18 +12,19 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
-import tw.gltc.shpng.ref.ItemRef;
+import tw.gltc.shpng.ref.item.ItemFactory;
+import tw.gltc.shpng.ref.item.ItemRefIfc;
 
 public class ItemRefTest {
 
-	static ItemRef itmRef;
+	static ItemRefIfc itmRef;
 
 	@Rule
 	public ExpectedException exception = ExpectedException.none();
 
 	@BeforeClass
 	public static void initAll() {
-		itmRef = ItemRef.getInstance();
+		itmRef = ItemFactory.getItem(ItemFactory.GALACTIC_ITEM_SRC_NAME);
 	}
 
 	@Test

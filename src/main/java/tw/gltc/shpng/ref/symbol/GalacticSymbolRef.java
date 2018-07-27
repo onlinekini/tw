@@ -1,4 +1,4 @@
-package tw.gltc.shpng.ref;
+package tw.gltc.shpng.ref.symbol;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -18,14 +18,14 @@ import tw.gltc.shpng.exception.ConversionException;
  * @author vkini
  *
  */
-public class SymbolRef {
+public class GalacticSymbolRef implements SymbolRefIfc {
 
 	private Map<String, Integer> symbolConversionValues;
-	private static SymbolRef symbolRef;
+	private static SymbolRefIfc symbolRef;
 	private static Map<String, Integer> romanNumerals;
 	
 
-	private SymbolRef() {
+	private GalacticSymbolRef() {
 		symbolConversionValues = new HashMap<>();
 		romanNumerals = new HashMap<>();
 		romanNumerals.put("I", 1);
@@ -37,13 +37,13 @@ public class SymbolRef {
 		romanNumerals.put("M", 1000); // setup
 	}
 	
-	public static SymbolRef getInstance() {
-		symbolRef = new SymbolRef();
+	public static SymbolRefIfc getInstance() {
+		symbolRef = new GalacticSymbolRef();
 		return symbolRef;
 	}
 	
 	public void manualInit(Map<String, Integer> symbolValues) throws ConversionException {
-		symbolConversionValues = symbolValues;
+		symbolConversionValues.putAll(symbolValues); // This is dangerous, do I need this
 	}
 	
 	public void manualInit(String symbolName, String romanNumeral) {
