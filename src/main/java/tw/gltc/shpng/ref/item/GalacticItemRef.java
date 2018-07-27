@@ -5,10 +5,9 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
@@ -30,8 +29,7 @@ import tw.gltc.shpng.exception.ItemException;
  */
 public class GalacticItemRef implements ItemRefIfc {
 
-	private List<String> itemNames;
-	private Map<String, ItemDTO> itemValues = new HashMap<>();
+	private Map<String, ItemDTO> items = new HashMap<>();
 	private static ItemRefIfc itmRef;
 	
 	private GalacticItemRef() {
@@ -53,8 +51,8 @@ public class GalacticItemRef implements ItemRefIfc {
 		Properties props = new Properties();
 		try {
 			props.load(new FileInputStream(new File("items.properties")));
-			itemNames = new ArrayList<>();
-			itemNames.addAll(Arrays.asList(props.getProperty("item.names").trim().toUpperCase().split("\\s*,\\s*")));	
+			
+			Arrays.stream(props.getProperty("item.names").trim().toUpperCase().split("\\s*,\\s*")).forEach( o -> itmRef.updateItemValue(o.toUpperCase(), new BigDecimal(0)));	
 			//System.out.println("Item init complete");
 		} catch (FileNotFoundException e) {
 			System.out.println(" File Not found : I cannot identify the items");
@@ -73,7 +71,7 @@ public class GalacticItemRef implements ItemRefIfc {
 	@Override
 	public ItemDTO getItem(String item) {
 		try {
-			return itemValues.containsKey(item.toUpperCase()) ? itemValues.get(item.toUpperCase()).clone() : null;
+			return items.containsKey(item.toUpperCase()) ? items.get(item.toUpperCase()).clone() : null;
 		} catch (CloneNotSupportedException e) {
 			throw new ItemException("Unknown exception in cloning : ", e);
 		}
@@ -84,8 +82,8 @@ public class GalacticItemRef implements ItemRefIfc {
 	 * @see tw.gltc.shpng.ref.ItemRefIfc#containsItem(java.lang.String)
 	 */
 	@Override
-	public boolean containsItem(String item) {
-		return itemNames.contains(item.toUpperCase());
+	public boolean containsItem(String itemName) {
+		return items.containsKey(itemName.toUpperCase());
 	}
 	
 	/*
@@ -95,7 +93,7 @@ public class GalacticItemRef implements ItemRefIfc {
 	@Override
 	public void updateItemValues(Map<String, BigDecimal> itemVals) {
 		for (Map.Entry<String, BigDecimal> entry : itemVals.entrySet()) {
-			if (itemNames.contains(entry.getKey())) {
+			if (containsItem(entry.getKey())) {
 				updateItemValue(entry.getKey(), entry.getValue());
 			} else {
 				throw new ItemException("Item " + entry.getKey() + " not found ");
@@ -110,8 +108,7 @@ public class GalacticItemRef implements ItemRefIfc {
 	 */
 	@Override
 	public void updateItemValue(String itemName, BigDecimal unitPric) {
-		itemNames.add(itemName.toUpperCase());
-		itemValues.put(itemName.toUpperCase(), new ItemDTO(itemName.toUpperCase(), unitPric));
+		items.put(itemName.toUpperCase(), new ItemDTO(itemName.toUpperCase(), unitPric));
 	}
 	
 	/*
@@ -129,7 +126,7 @@ public class GalacticItemRef implements ItemRefIfc {
 	 */
 	@Override
 	public BigDecimal getItemValue(String item) {
-		BigDecimal itemValue = itemValues.get(item) != null ? itemValues.get(item).getItemUnitPrice() : new BigDecimal(0);
+		BigDecimal itemValue = items.get(item) != null ? items.get(item).getItemUnitPrice() : new BigDecimal(0);
 		return itemValue;
 	}
 	
@@ -139,8 +136,8 @@ public class GalacticItemRef implements ItemRefIfc {
 	 * @see tw.gltc.shpng.ref.ItemRefIfc#getItemNames()
 	 */
 	@Override
-	public List<String> getItemNames() {
-		return itemNames;
+	public Collection<String> getItemNames() {
+		return items.keySet();
 	}
 
 	public static void main(String [] args) {

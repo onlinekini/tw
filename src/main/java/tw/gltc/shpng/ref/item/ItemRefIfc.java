@@ -1,7 +1,7 @@
 package tw.gltc.shpng.ref.item;
 
 import java.math.BigDecimal;
-import java.util.List;
+import java.util.Collection;
 import java.util.Map;
 
 import tw.gltc.shpng.dto.ItemDTO;
@@ -74,5 +74,5 @@ public interface ItemRefIfc {
 	 * Get all item names.
 	 * @return List of item names
 	 */
-	public List<String> getItemNames();
+	public Collection<String> getItemNames();
 }
