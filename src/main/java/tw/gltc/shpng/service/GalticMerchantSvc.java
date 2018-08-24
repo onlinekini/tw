@@ -32,14 +32,19 @@ import tw.gltc.shpng.ref.symbol.SymbolRefIfc;
  * @author vkini
  *
  */
-public class InteragalticMerchantSvc {
+public class GalticMerchantSvc {
 
 	private ItemValueComputer itemValueComputer;
 	private ItemRefIfc itmRef;
 	private SymbolRefIfc symblRef;
 	private SymbolToNumberConverter symbolToNumConverter;
 
-	public InteragalticMerchantSvc() {
+	public static void main(String[] args) {
+		GalticMerchantSvc merchantScv = new GalticMerchantSvc();
+		merchantScv.processInput();
+	}
+	
+	public GalticMerchantSvc() {
 		itmRef = ItemFactory.getItem(ItemFactory.GALACTIC_ITEM_SRC_NAME);
 		symblRef = SymbolFactory.getSymbolsFor(SymbolFactory.GALACTIC_SYMBOL_TYPE);
 		symbolToNumConverter = new SymbolToNumberConverter(symblRef);
@@ -55,6 +60,7 @@ public class InteragalticMerchantSvc {
 		BufferedReader rdr = null;
 		boolean isItemsetup = false;
 		boolean isQuestion = false;
+		boolean isConversion = false;
 
 		String input = null;
 
@@ -66,24 +72,25 @@ public class InteragalticMerchantSvc {
 				}	
 				isItemsetup = input.trim().toLowerCase().endsWith("credits");
 				isQuestion = input.endsWith("?");
+				isConversion = (input.endsWith("?") && (itemValueComputer.containsMoreThanOneItem(input) == 2));
 
 				if (input.trim().length() > 0) { // Empty line check
-					if (isQuestion) { //Ending with a "?" so a question
-						//System.out.println(" Computed Q String = " + input.substring(input.indexOf(" is ") + 4, input.indexOf("?")));
+					if (isConversion) {
+						//System.out.println(isConversion);
+						System.out.println(itemValueComputer.calculateItemValueFromAnother(input.substring(input.indexOf(" is ") + 4, input.indexOf("?")), input.substring(input.indexOf(" many ") + 4, input.indexOf(" is "))));
+					} else if (isQuestion) { //Ending with a "?" so a question
 						request = itemValueComputer.getTotalValue(input.substring(input.indexOf(" is ") + 4, input.indexOf("?")));
+						
+						
 						if (request != null && request.hasItem() ) {
 							System.out.println(input.substring(input.indexOf(" is ") + 4, input.indexOf("?")) + " is " + request.getTotalPrice() + " Credits");
 						} else if (request != null) {
 							System.out.println(input.substring(input.indexOf(" is ") + 4, input.indexOf("?")) + " is " + request.getTotalPrice());
 						}
 					} else if (isItemsetup) { // if it ends with credits and not ? it is item setup
-						//System.out.println(" Computed Item String = " + input.substring(0, input.indexOf(" is ")).trim());
-						//System.out.println(" Computed value = " + input.substring(input.indexOf("is")+2, input.indexOf("Credit")).trim());
 						itmDTO = itemValueComputer.calculateItemValue(input.substring(0, input.indexOf(" is ")).trim(), new BigDecimal(input.substring(input.indexOf(" is ") + 4, input.indexOf("Credit")).trim()));
 						itmRef.updateItemValue(itmDTO);
-						//System.out.println();
 					} else { //  // Neither a question or an item info, surely setup info
-						//System.out.println(" Processing symbol String = " + Arrays.toString(input.trim().split("\\s*,\\s*")));
 						String[] values = input.trim().split("\\s* \\s*"); // trimmed values
 						symblRef.manualInit(values[0], values[2]);
 					}

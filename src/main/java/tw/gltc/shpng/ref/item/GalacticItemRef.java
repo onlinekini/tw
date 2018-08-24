@@ -8,6 +8,7 @@ import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
@@ -52,8 +53,12 @@ public class GalacticItemRef implements ItemRefIfc {
 		try {
 			props.load(new FileInputStream(new File("items.properties")));
 			
-			Arrays.stream(props.getProperty("item.names").trim().toUpperCase().split("\\s*,\\s*")).forEach( o -> itmRef.updateItemValue(o.toUpperCase(), new BigDecimal(0)));	
-			//System.out.println("Item init complete");
+ 			List<String> itemList = Arrays.asList(props.getProperty("item.names").trim().toUpperCase().split("\\s*,\\s*"));	
+ 			for (String itmName : itemList ) {
+ 				items.put(itmName.toUpperCase(), new ItemDTO(itmName.toUpperCase(),  new BigDecimal(0)));
+ 			}
+ 			
+ 			//System.out.println("Item init complete");
 		} catch (FileNotFoundException e) {
 			System.out.println(" File Not found : I cannot identify the items");
 			throw new ItemException("items.properties File not found, cannot start without that" , e);
@@ -85,7 +90,7 @@ public class GalacticItemRef implements ItemRefIfc {
 	public boolean containsItem(String itemName) {
 		return items.containsKey(itemName.toUpperCase());
 	}
-	
+
 	/*
 	 * (non-Javadoc)
 	 * @see tw.gltc.shpng.ref.ItemRefIfc#updateItemValues(java.util.Map)
@@ -128,8 +133,7 @@ public class GalacticItemRef implements ItemRefIfc {
 	public BigDecimal getItemValue(String item) {
 		BigDecimal itemValue = items.get(item) != null ? items.get(item).getItemUnitPrice() : new BigDecimal(0);
 		return itemValue;
-	}
-	
+	}	
 	
 	/*
 	 * (non-Javadoc)

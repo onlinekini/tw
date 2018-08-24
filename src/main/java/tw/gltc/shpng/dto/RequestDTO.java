@@ -40,7 +40,7 @@ public class RequestDTO {
 	}
 
 	public BigDecimal getTotalPrice() {
-		return totalPrice.setScale(0);
+		return totalPrice.setScale(2);
 	}
 
 	public void setTotalPrice(BigDecimal totalPrice) {
