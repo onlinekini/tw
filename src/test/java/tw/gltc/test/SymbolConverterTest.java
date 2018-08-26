@@ -7,14 +7,14 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
-import tw.gltc.shpng.exception.ConversionException;
+import tw.gltc.shpng.exception.ComputeException;
 import tw.gltc.shpng.ref.symbol.SymbolFactory;
 import tw.gltc.shpng.ref.symbol.SymbolRefIfc;
-import tw.gltc.shpng.service.SymbolToNumberConverter;
+import tw.gltc.shpng.symbol.RomanToNumConverter;
 
 public class SymbolConverterTest {
 
-	static SymbolToNumberConverter converter;
+	static GalaticToNumric converter;
 
 	@Rule
 	public ExpectedException exception = ExpectedException.none();
@@ -29,7 +29,7 @@ public class SymbolConverterTest {
 		symRef.manualInit("cfug", "C");
 		symRef.manualInit("dfle", "D");
 		symRef.manualInit("mgng", "M");
-		converter = new SymbolToNumberConverter(symRef);
+		converter = new GalaticToNumric(symRef);
 	}
 
 	@Test
@@ -47,7 +47,7 @@ public class SymbolConverterTest {
 
 	@Test
 	public void testSymbolConverterExcpn () { // Exception check
-		exception.expect(ConversionException.class);
+		exception.expect(ComputeException.class);
 		exception.expectMessage("I have no idea what you are talking about");
 		converter.convertToNumber("pish something "); // Get exception
 	}

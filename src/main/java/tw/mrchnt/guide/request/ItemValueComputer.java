@@ -1,19 +1,20 @@
-package tw.gltc.shpng.service;
+package tw.mrchnt.guide.request;
 
 import java.math.BigDecimal;
 import java.util.Arrays;
 
-import tw.gltc.shpng.dto.ItemDTO;
+import tw.gltc.shpng.dto.Item;
 import tw.gltc.shpng.dto.RequestDTO;
-import tw.gltc.shpng.exception.ConversionException;
+import tw.gltc.shpng.exception.ComputeException;
 import tw.gltc.shpng.ref.item.GalacticItemRef;
 import tw.gltc.shpng.ref.item.ItemRefIfc;
+import tw.gltc.shpng.symbol.RomanToNumConverter;
 
 /**
  * This class does the computation of a "requirement" into a value. provided the requirments have valid symbols and items
  * 
  * Uses {@link GalacticItemRef} as the source of all item information
- * Uses {@link SymbolToNumberConverter} to convert symbols to numeric values
+ * Uses {@link GalaticToNumric} to convert symbols to numeric values
  * These are constructor arguments.
  *  
  * @author vkini
@@ -21,16 +22,16 @@ import tw.gltc.shpng.ref.item.ItemRefIfc;
  */
 public class ItemValueComputer {
 
-	private SymbolToNumberConverter symbolConverter = null;
+	private GalaticToNumric symbolConverter = null;
 	private ItemRefIfc itmRef = null;
 	
 	/**
 	 * Constructor
 	 * 
-	 * @param symbolNumConverter {@link SymbolToNumberConverter}
-	 * @param itmRef {@link SymbolToNumberConverter}
+	 * @param symbolNumConverter {@link GalaticToNumric}
+	 * @param itmRef {@link GalaticToNumric}
 	 */
-	public ItemValueComputer (SymbolToNumberConverter symbolNumConverter, ItemRefIfc itmRef) {
+	public ItemValueComputer (GalaticToNumric symbolNumConverter, ItemRefIfc itmRef) {
 		this.symbolConverter = symbolNumConverter;
 		this.itmRef = itmRef;
 	}
@@ -40,7 +41,7 @@ public class ItemValueComputer {
 	 * This method takes in the symbol input along with the item and then converts it to an objects with all the information of the request
 	 * It strips the item, computes the mathematic value of the symbols and finally multiplies it with the unit price of the item.
 	 * 
-	 * Else throws Runtime exception {@link ConversionException} is the symbol or item is null or invalid
+	 * Else throws Runtime exception {@link ComputeException} is the symbol or item is null or invalid
 	 * 
 	 * @param inRequest String format of the requirement
 	 * @return the entire information of the request alogn with original Request String and th item associated with the string {@link RequestDTO}
@@ -62,7 +63,7 @@ public class ItemValueComputer {
 			
 			return requestDTO;
 		} else {
-			throw new ConversionException("Request null, cannot convert");
+			throw new ComputeException("Request null, cannot convert");
 		}
 		
 	}
@@ -71,26 +72,26 @@ public class ItemValueComputer {
 	 * This method computes the unit value of the item, given the "formula" and the value.
 	 * Provided the symbols and the items are valid
 	 * 
-	 * Else throws Runtime exception {@link ConversionException} is the symbol is null or invalid
+	 * Else throws Runtime exception {@link ComputeException} is the symbol is null or invalid
 	 * 
 	 * @param symbolsWithItemAtEnd request string with symbols and item
 	 * @param totalValue value of the formula provided in the previous argument 
-	 * @return Item information with item name and item unit price {@link ItemDTO}
+	 * @return Item information with item name and item unit price {@link MessageRuleIfc}
 	 */
-	public ItemDTO calculateItemValue(String symbolsWithItemAtEnd, BigDecimal totalValue) {
-		ItemDTO itemDto = null;
+	public MessageRuleIfc calculateItemValue(String symbolsWithItemAtEnd, BigDecimal totalValue) {
+		MessageRuleIfc itemDto = null;
 		if (symbolsWithItemAtEnd != null) {
 			String[] symbolArray = symbolsWithItemAtEnd.split("\\s* \\s*");
 			if (itmRef.containsItem(symbolArray[symbolArray.length -1].toUpperCase())) {
 				int mathematicalValue = symbolConverter.convertToNumber(Arrays.copyOf(symbolArray, symbolArray.length -1));
 				BigDecimal itemValue = totalValue.divide(new BigDecimal(mathematicalValue));
-				itemDto = new ItemDTO(symbolArray[symbolArray.length -1].toUpperCase(), itemValue);
+				itemDto = new MessageRuleIfc(symbolArray[symbolArray.length -1].toUpperCase(), itemValue);
 			} else {
 				return null;
 			}
 			return itemDto;
 		} else {
-			throw new ConversionException("Request null, cannot convert");
+			throw new ComputeException("Request null, cannot convert");
 		}
 		
 	}
@@ -102,7 +103,7 @@ public class ItemValueComputer {
 		RequestDTO reqDTO = new RequestDTO();
 		reqDTO.setOriginalRequest(inRequest);
 		String[] itemsAndNumerics = inRequest.split(" ");
-		ItemDTO item = itmRef.getItem(itemsAndNumerics[itemsAndNumerics.length - 1]); // get the last item
+		MessageRuleIfc item = itmRef.getItem(itemsAndNumerics[itemsAndNumerics.length - 1]); // get the last item
 		if (item != null) {
 			reqDTO.setAssociatedItem(item);
 			reqDTO.setHasItem(true);

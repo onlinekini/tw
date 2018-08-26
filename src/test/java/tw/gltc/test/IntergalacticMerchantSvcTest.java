@@ -9,7 +9,7 @@ import tw.gltc.shpng.service.InteragalticMerchantSvc;
 
 public class IntergalacticMerchantSvcTest {
 
-	static InteragalticMerchantSvc intergalacticMerchantSvc;
+	static Gala intergalacticMerchantSvc;
 
 	@Rule
 	public ExpectedException exception = ExpectedException.none();

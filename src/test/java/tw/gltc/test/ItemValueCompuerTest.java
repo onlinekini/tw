@@ -9,15 +9,15 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
-import tw.gltc.shpng.dto.ItemDTO;
+import tw.gltc.shpng.dto.Item;
 import tw.gltc.shpng.dto.RequestDTO;
-import tw.gltc.shpng.exception.ConversionException;
+import tw.gltc.shpng.exception.ComputeException;
 import tw.gltc.shpng.ref.item.ItemFactory;
 import tw.gltc.shpng.ref.item.ItemRefIfc;
 import tw.gltc.shpng.ref.symbol.SymbolFactory;
 import tw.gltc.shpng.ref.symbol.SymbolRefIfc;
 import tw.gltc.shpng.service.ItemValueComputer;
-import tw.gltc.shpng.service.SymbolToNumberConverter;
+import tw.gltc.shpng.symbol.RomanToNumConverter;
 
 public class ItemValueCompuerTest {
 
@@ -41,7 +41,7 @@ public class ItemValueCompuerTest {
 		itmRef.updateItemValue("Gold", new BigDecimal(10));
 		itmRef.updateItemValue("Silver", new BigDecimal(100));
 
-		SymbolToNumberConverter converter = new SymbolToNumberConverter(symRef);
+		GalaticToNumric converter = new GalaticToNumric(symRef);
 		itemValueComputer = new ItemValueComputer(converter, itmRef);
 	}
 
@@ -67,7 +67,7 @@ public class ItemValueCompuerTest {
 	
 	@Test
 	public void testGetTotalValueWithItemNeg() { // With item and lots pof spaces before after and middle
-		ItemDTO  itemDTO = new ItemDTO("SILVER", new BigDecimal(17));
+		MessageRuleIfc  itemDTO = new MessageRuleIfc("SILVER", new BigDecimal(17));
 		
 		assertEquals(itemDTO, itemValueComputer.calculateItemValue("glob glob Silver", new BigDecimal(34)));
 	}
@@ -97,7 +97,7 @@ public class ItemValueCompuerTest {
 	
 	
 	public void testWithException() {
-		exception.expect(ConversionException.class);
+		exception.expect(ComputeException.class);
 		exception.expectMessage("I have no idea what you are talking about");
 		RequestDTO reqDTO = new RequestDTO();
 		reqDTO.setHasItem(true);

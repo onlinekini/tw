@@ -7,7 +7,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
-import tw.gltc.shpng.exception.ConversionException;
+import tw.gltc.shpng.exception.ComputeException;
 import tw.gltc.shpng.ref.symbol.SymbolFactory;
 import tw.gltc.shpng.ref.symbol.SymbolRefIfc;
 
@@ -49,7 +49,7 @@ public class SymbolRefTest {
 	
 	@Test
 	public void basicTestWithExcpn() { // Without Item
-		exception.expect(ConversionException.class);
+		exception.expect(ComputeException.class);
 		exception.expectMessage("I have no idea what you are talking about");
 		assertEquals(new Integer(5), symRef.getNumericEquivalent("xing"));
 	}

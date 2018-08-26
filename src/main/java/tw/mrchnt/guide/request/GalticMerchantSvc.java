@@ -1,4 +1,4 @@
-package tw.gltc.shpng.service;
+package tw.mrchnt.guide.request;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -7,14 +7,15 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.math.BigDecimal;
 
-import tw.gltc.shpng.dto.ItemDTO;
+import tw.gltc.shpng.dto.Item;
 import tw.gltc.shpng.dto.RequestDTO;
-import tw.gltc.shpng.exception.ConversionException;
+import tw.gltc.shpng.exception.ComputeException;
 import tw.gltc.shpng.exception.ItemException;
 import tw.gltc.shpng.ref.item.ItemFactory;
 import tw.gltc.shpng.ref.item.ItemRefIfc;
 import tw.gltc.shpng.ref.symbol.SymbolFactory;
 import tw.gltc.shpng.ref.symbol.SymbolRefIfc;
+import tw.gltc.shpng.symbol.RomanToNumConverter;
 
 /**
  * This class is a helper to test the input from the Input.test file 
@@ -37,7 +38,7 @@ public class GalticMerchantSvc {
 	private ItemValueComputer itemValueComputer;
 	private ItemRefIfc itmRef;
 	private SymbolRefIfc symblRef;
-	private SymbolToNumberConverter symbolToNumConverter;
+	private GalaticToNumric symbolToNumConverter;
 
 	public static void main(String[] args) {
 		GalticMerchantSvc merchantScv = new GalticMerchantSvc();
@@ -47,7 +48,7 @@ public class GalticMerchantSvc {
 	public GalticMerchantSvc() {
 		itmRef = ItemFactory.getItem(ItemFactory.GALACTIC_ITEM_SRC_NAME);
 		symblRef = SymbolFactory.getSymbolsFor(SymbolFactory.GALACTIC_SYMBOL_TYPE);
-		symbolToNumConverter = new SymbolToNumberConverter(symblRef);
+		symbolToNumConverter = new GalaticToNumric(symblRef);
 		itemValueComputer = new ItemValueComputer(symbolToNumConverter, itmRef);
 	}
 
@@ -55,7 +56,7 @@ public class GalticMerchantSvc {
 
 		File inputFile = new File("Input.test");
 		
-		ItemDTO itmDTO = null;
+		MessageRuleIfc itmDTO = null;
 		RequestDTO request = null;
 		BufferedReader rdr = null;
 		boolean isItemsetup = false;
@@ -101,7 +102,7 @@ public class GalticMerchantSvc {
 			System.out.println(e.getMessage());
 		} catch (IOException e) {
 			System.out.println(e.getMessage());
-		} catch (ConversionException e) {
+		} catch (ComputeException e) {
 			System.out.println(e.getMessage());
 		} catch (ItemException e) {
 			System.out.println(e.getMessage());
