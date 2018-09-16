@@ -1,6 +1,7 @@
 package tw.mrchnt.guide.rules;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import tw.mrchnt.guide.cart.Symbols;
@@ -28,7 +29,7 @@ public class ItemValueAssignmentRule implements MessageRuleIfc {
 	
 	@Override
 	public void applyRule(MessageIfc message) {
-		System.out.println("Applying : " + this.getClass().getName());
+		//System.out.println("Applying : " + this.getClass().getName());
 		List<MetaSymbol> symbols = new ArrayList<>();
 		String itemName = null;
 		Double numericValueInMessage = null;
@@ -42,10 +43,14 @@ public class ItemValueAssignmentRule implements MessageRuleIfc {
 				numericValueInMessage = Double.parseDouble(possibleSymbolItem);
 			}
 		}
-		MetaItem metaItm = ItemRefCatalogue.getItemRefCatalogue().getItem(itemName);
 			
+		Collections.reverse(symbols); // reverse it to calculate Roman values
 		Symbols symbs = new Symbols(symbols, new RomanNumeralRule());
-		metaItm.setItemUnitPrice(numericValueInMessage / symbs.getTotalValue());
+		ItemRefCatalogue.getItemRefCatalogue().addItem(new MetaItem(itemName, numericValueInMessage / symbs.getTotalValue()));
+		
+		//MetaItem itm = ItemRefCatalogue.getItemRefCatalogue().getItem(itemName);
+		//System.out.println(itm.getItemName() + " " + itm.getItemUnitPrice());
+		
 	}
 
 	@Override

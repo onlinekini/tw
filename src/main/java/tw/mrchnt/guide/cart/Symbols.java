@@ -1,5 +1,7 @@
 package tw.mrchnt.guide.cart;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.stream.Collectors;
@@ -43,6 +45,11 @@ public class Symbols implements Cloneable {
 		return totalValue;
 	}
 
+	
+	public String getTotalValueString() {
+		return new BigDecimal(totalValue).setScale(0, RoundingMode.DOWN).toString();
+	}
+	
 	public void setTotalValue(double totalValue) {
 		this.totalValue = totalValue;
 	}

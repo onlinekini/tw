@@ -13,9 +13,11 @@ import org.junit.Test;
 
 import tw.mrchnt.guide.message.Message;
 import tw.mrchnt.guide.message.SimpleMessageDecomposer;
+import tw.mrchnt.guide.rules.DummyRule;
 import tw.mrchnt.guide.rules.ItemValueAssignmentRule;
 import tw.mrchnt.guide.rules.MessageRuleIfc;
-import tw.mrchnt.guide.rules.NoItemWithSymbolRule;
+import tw.mrchnt.guide.rules.SymbolValueAssignmentRule;
+import tw.mrchnt.guide.rules.SymbolWithoutItemRule;
 import tw.mrchnt.guide.rules.SingleItemWithCreditRule;
 
 public class CoreTester {
@@ -25,9 +27,11 @@ public class CoreTester {
 	@BeforeClass
 	public static void initAll() {
 		messageRules = new ArrayList<>();
-		messageRules.add(NoItemWithSymbolRule.getRule()); // Get the symbol setup
+		messageRules.add(SymbolValueAssignmentRule.getRule()); // Get the symbol setup. This shold be first
+		messageRules.add(SymbolWithoutItemRule.getRule());// simply comput the symbols' value
 		messageRules.add(ItemValueAssignmentRule.getRule()); // Get the item setup
 		messageRules.add(SingleItemWithCreditRule.getRule()); // Credit setup
+		messageRules.add(DummyRule.getRule());//this should be the last 
 	}
 
 	@Test
@@ -45,10 +49,11 @@ public class CoreTester {
 				// from here on it is a NON comment
 				input = input.trim().replaceAll("( )+", " "); // remove multiple spaces if any.
 				Message msg = new Message(input, new SimpleMessageDecomposer(" "), null);
+				//System.out.println(msg.toString());
 				for (MessageRuleIfc messageRule : messageRules) {
-					System.out.println(msg.toString());
 					if(messageRule.canApplyRule(msg)) {
 						messageRule.applyRule(msg);
+						break;
 					}
 				}
 			}
@@ -57,7 +62,7 @@ public class CoreTester {
 		} catch (IOException e) {
 			System.out.println(e.getMessage());
 		} catch (Exception e) {
-			System.out.println(e.getMessage());
+			e.printStackTrace();
 		} finally {
 			if (rdr != null) {
 				try {

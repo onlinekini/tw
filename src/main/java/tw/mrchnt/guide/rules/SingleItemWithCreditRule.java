@@ -1,6 +1,7 @@
 package tw.mrchnt.guide.rules;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import tw.mrchnt.guide.cart.Item;
@@ -28,7 +29,7 @@ public class SingleItemWithCreditRule implements MessageRuleIfc {
 	
 	@Override
 	public void applyRule(MessageIfc message) {
-		System.out.println("Applying : " + this.getClass().getName());
+		//System.out.println("Applying : " + this.getClass().getName());
 		List<MetaSymbol> symbols = new ArrayList<>();
 		String itemName = null;
 		for (String possibleSymbolItem : message.getDecomposedMessage()) {
@@ -40,22 +41,22 @@ public class SingleItemWithCreditRule implements MessageRuleIfc {
 			}
 		}
 		
+		Collections.reverse(symbols);
 		Item anItem = new Item(ItemRefCatalogue.getItemRefCatalogue().getItem(itemName), new Symbols(symbols, new RomanNumeralRule()));
 		System.out.println(anItem.toString());
 	}
 
 	@Override
 	public boolean canApplyRule(MessageIfc message) {
-		boolean canApplyRule = BaseMessageRules.endsWithQuestion(message) && 
-								BaseMessageRules.startsWithHowMany(message) && 
-								BaseMessageRules.fourthStringIs(message);
+		boolean canApplyRule = 	BaseMessageRules.startsWithHowMany(message);
+		//System.out.println(" Symbol setup : " + canApplyRule + " -> " + checkOneItemWithCredit(message));
 		
 		return canApplyRule && checkOneItemWithCredit(message);
 	}
 	
 	private boolean checkOneItemWithCredit(MessageIfc message) {
 		int tempCount = 0;
-		if (!"Credit".equalsIgnoreCase(message.getDecomposedMessage()[2])) {
+		if (!"Credits".equalsIgnoreCase(message.getDecomposedMessage()[2])) {
 			return false;
 		}
 		for (String possibleItem : message.getDecomposedMessage()) {

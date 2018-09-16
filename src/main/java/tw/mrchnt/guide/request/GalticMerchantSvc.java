@@ -11,7 +11,7 @@ import tw.mrchnt.guide.message.Message;
 import tw.mrchnt.guide.message.SimpleMessageDecomposer;
 import tw.mrchnt.guide.rules.ItemValueAssignmentRule;
 import tw.mrchnt.guide.rules.MessageRuleIfc;
-import tw.mrchnt.guide.rules.NoItemWithSymbolRule;
+import tw.mrchnt.guide.rules.SymbolValueAssignmentRule;
 import tw.mrchnt.guide.rules.SingleItemWithCreditRule;
 
 /**

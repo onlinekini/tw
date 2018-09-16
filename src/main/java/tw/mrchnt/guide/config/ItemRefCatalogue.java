@@ -1,6 +1,8 @@
 package tw.mrchnt.guide.config;
 
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
@@ -10,9 +12,11 @@ public class ItemRefCatalogue {
 
 	private Map<String, MetaItem> itemsMap;
 	private static ItemRefCatalogue itemCatalogue;
+	private List<String> itemNames;
 
 	private ItemRefCatalogue() {
 		itemsMap = new HashMap<>();
+		itemNames = Arrays.asList(ItemConfig.getReference().getProperty("item.names").toLowerCase().split(","));
 		itemsMap.put("", new MetaItem("", 1.0)); // HACKED null item
 	}
 
@@ -32,7 +36,7 @@ public class ItemRefCatalogue {
 	}
 
 	public boolean isItem(String inputStr) {
-		return itemsMap.containsKey(inputStr.toLowerCase());
+		return itemNames.contains(inputStr.toLowerCase());// itemsMap.containsKey(inputStr.toLowerCase());
 	}
 
 	public MetaItem getItem(String inputStr) {

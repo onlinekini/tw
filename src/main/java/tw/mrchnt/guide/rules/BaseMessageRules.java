@@ -32,7 +32,7 @@ public class BaseMessageRules {
 		return "is".equalsIgnoreCase(message.getDecomposedMessage()[3]);
 	}
 	
-	public static boolean endWithRomanNumeral(MessageIfc message) {
+	public static boolean endsWithRomanNumeral(MessageIfc message) {
 		return ("I,V,X,L,C,M").contains(message.getDecomposedMessage()[message.getDecomposedMessage().length - 1]);
 	}
 	

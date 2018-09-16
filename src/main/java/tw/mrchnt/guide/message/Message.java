@@ -65,4 +65,8 @@ public class Message implements MessageIfc {
 		this.destinationStr = destinationStr;
 	}
 	
+	
+	public String toString() {
+		return originalRequestMessage;
+	}
 }
