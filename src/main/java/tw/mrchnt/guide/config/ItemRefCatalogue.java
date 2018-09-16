@@ -13,6 +13,7 @@ public class ItemRefCatalogue {
 
 	private ItemRefCatalogue() {
 		itemsMap = new HashMap<>();
+		itemsMap.put("", new MetaItem("", 1.0)); // HACKED null item
 	}
 
 	public static ItemRefCatalogue getItemRefCatalogue() {

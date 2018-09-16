@@ -4,7 +4,7 @@ import java.util.Collection;
 
 import tw.mrchnt.guide.config.MetaSymbol;
 
-public interface NumeralRule {
+public interface NumeralRuleIfc {
 	
 	boolean canApplyRule(Collection<MetaSymbol> metas);
 

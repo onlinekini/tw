@@ -13,8 +13,8 @@ public class SimpleMessageDecomposer  implements DecomposerIfc {
 	
 	@Override
 	public String[] decomposeMessage(String message) {
-		return (String[]) Pattern.compile(separators).splitAsStream(message)
+		return Pattern.compile(separators).splitAsStream(message)
 				.filter(o -> o.trim().length() > 0)
-				.toArray();
+				.toArray(String[] :: new);
 	}	
 }

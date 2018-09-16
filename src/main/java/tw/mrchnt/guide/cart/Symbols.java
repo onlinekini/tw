@@ -6,7 +6,7 @@ import java.util.stream.Collectors;
 
 import tw.mrchnt.guide.config.MetaSymbol;
 import tw.mrchnt.guide.config.SymbolRefCatalogue;
-import tw.mrchnt.guide.rules.NumeralRule;
+import tw.mrchnt.guide.rules.NumeralRuleIfc;
 
 /**
  * This class represents a group of Meta-symbols 
@@ -18,13 +18,13 @@ public class Symbols implements Cloneable {
 	private final Collection<MetaSymbol> metaSymbols;
 	private Double totalValue;
 		
-	public Symbols(Collection<MetaSymbol> inMetaSymbols, NumeralRule numeralRule) {
+	public Symbols(Collection<MetaSymbol> inMetaSymbols, NumeralRuleIfc numeralRule) {
 		metaSymbols = inMetaSymbols;
 		totalValue = numeralRule.applyRule(metaSymbols);
 		
 	}
 	
-	public Symbols(String[] inMetaSymbolStrs, NumeralRule numeralRule) {
+	public Symbols(String[] inMetaSymbolStrs, NumeralRuleIfc numeralRule) {
 		SymbolRefCatalogue symbolCatalogue = SymbolRefCatalogue.getSymbolCatalogue();
 		
 		metaSymbols = Arrays.stream(inMetaSymbolStrs)
@@ -47,6 +47,13 @@ public class Symbols implements Cloneable {
 		this.totalValue = totalValue;
 	}
 	
-	
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		for (MetaSymbol symbol : metaSymbols) {
+			sb.append(symbol.toString());
+			sb.append(" ");
+		}
+		return sb.toString();
+	}
 
 }

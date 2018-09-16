@@ -1,26 +1,37 @@
 package tw.mrchnt.guide.message;
 
+import java.util.List;
+
+import tw.mrchnt.guide.config.ComputeException;
+
 public class Message implements MessageIfc {
 	
 	private final String originalRequestMessage;
 	private final String preppedMessage;
 	private final String[] decomposedMessage;
-	private DecomposerIfc decomposer;
-	private PrepperIfc messagePrepper;
 	private String[] sourceStrs;
 	private String destinationStr;
 	 
 	
-	public Message(String originalReqMessage, final DecomposerIfc inDecomposer, final PrepperIfc messagePrepper) {
+	public Message(String originalReqMessage, final DecomposerIfc messageDecomposer, final List<PrepperIfc> optionalMessagePreppers) {
 		originalRequestMessage = originalReqMessage;
-		this.messagePrepper = messagePrepper;
-		if (this.messagePrepper != null) {
-			preppedMessage = this.messagePrepper.prepMessage(originalReqMessage);
+		
+		// Do you need to prep the message ? use message preppers
+		if (optionalMessagePreppers != null && !optionalMessagePreppers.isEmpty()) {
+			String tempPreppedMessage = originalReqMessage;
+			for (PrepperIfc prepper : optionalMessagePreppers) {
+				tempPreppedMessage = prepper.prepMessage(tempPreppedMessage);
+			}
+			preppedMessage = tempPreppedMessage;
 		} else {
 			preppedMessage = originalReqMessage;
 		}
-		decomposer = inDecomposer;
-		decomposedMessage = decomposer.decomposeMessage(preppedMessage);
+		
+		// decomposer is mandatory
+		if (messageDecomposer == null) {
+			throw new ComputeException("Message Decomposer needed to process the message");
+		}
+		decomposedMessage = messageDecomposer.decomposeMessage(preppedMessage);
 	}
 	
 	@Override

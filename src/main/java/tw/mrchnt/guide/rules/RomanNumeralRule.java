@@ -5,7 +5,7 @@ import java.util.Collection;
 import tw.mrchnt.guide.config.ComputeException;
 import tw.mrchnt.guide.config.MetaSymbol;
 
-public class RomanNumeralRule implements NumeralRule {
+public class RomanNumeralRule implements NumeralRuleIfc {
 	
 	@Override
 	public Double applyRule(Collection<MetaSymbol> metas) {

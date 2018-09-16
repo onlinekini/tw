@@ -45,4 +45,14 @@ public class Item {
 	public String getTotalItemValue() {
 		return new BigDecimal(symbols.getTotalValue() * referenceItem.getItemUnitPrice()).setScale(0, RoundingMode.DOWN).toString();
 	}
+	
+	public String toString() {
+		StringBuilder sb = new StringBuilder()
+								.append(symbols.toString())
+								.append(referenceItem.toString())
+								.append(" is ")
+								.append(getTotalItemValue())
+								.append(" Credits");
+		return sb.toString(); 
+	}
 }

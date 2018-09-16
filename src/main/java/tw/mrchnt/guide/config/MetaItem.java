@@ -6,7 +6,7 @@ import java.math.RoundingMode;
 public class MetaItem implements Cloneable {
 
 	private final String itemName;
-	private final Double itemUnitPrice;
+	private Double itemUnitPrice;
 	
 	public MetaItem(String itmName, Double itmUnitPrice) {
 		itemName = itmName;
@@ -24,6 +24,10 @@ public class MetaItem implements Cloneable {
 
 	public Double getItemUnitPrice() {
 		return Double.valueOf(itemUnitPrice);
+	}
+	
+	public void setItemUnitPrice(Double unitPrice) {
+		itemUnitPrice = unitPrice;
 	}
 	
 	public Double getItemUnitPriceScaledTo(int scale) {
@@ -57,5 +61,9 @@ public class MetaItem implements Cloneable {
 		int result = 1;
 		result = prime * result + ((itemName == null) ? 0 : itemName.hashCode()) + ((itemUnitPrice == null) ? 0 : itemUnitPrice.hashCode());
 		return result;
+	}
+	
+	public String toString() {
+		return itemName;
 	}
 }
