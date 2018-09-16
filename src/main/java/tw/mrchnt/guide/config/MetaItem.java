@@ -1,4 +1,4 @@
-package tw.mrchnt.guide.item;
+package tw.mrchnt.guide.config;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;

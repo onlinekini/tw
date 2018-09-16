@@ -1,7 +1,9 @@
-package tw.mrchnt.guide.symbol;
+package tw.mrchnt.guide.config;
 
-import tw.mrchnt.guide.config.Reference;
-
+/**
+ * This class represents Glob, phish, teg... etc
+ *
+ */
 public class MetaSymbol implements Cloneable {
 
 	private final String symbolName;
@@ -13,9 +15,10 @@ public class MetaSymbol implements Cloneable {
 	public MetaSymbol(String symName, String romanEquivalent) {
 		symbolName = symName;
 		romanNumEquivalent = romanEquivalent;
-		numericEquivalent = Integer.parseInt(Reference.getReference().getProperty("symbol." + romanEquivalent.toUpperCase()));
-		canNegate = !Reference.getReference().getProperty("symbol.subs").contains(romanNumEquivalent);
-		canRepeat = !Reference.getReference().getProperty("symbol.reps").contains(romanNumEquivalent);
+		
+		numericEquivalent = Integer.parseInt(Config.getReference().getProperty("symbol." + romanEquivalent.toUpperCase()));
+		canNegate = !Config.getReference().getProperty("symbol.subs").contains(romanNumEquivalent);
+		canRepeat = !Config.getReference().getProperty("symbol.reps").contains(romanNumEquivalent);
 	}
 
 	public String getSymbolName() {
@@ -56,5 +59,10 @@ public class MetaSymbol implements Cloneable {
 	@Override
 	public int hashCode() {
 		return this.numericEquivalent + symbolName.hashCode();
+	}
+	
+	
+	public String toString() {
+		return symbolName;
 	}
 }

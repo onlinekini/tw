@@ -1,4 +1,4 @@
-package tw.mrchnt.guide.exception;
+package tw.mrchnt.guide.config;
 
 public class ComputeException extends  RuntimeException {
 			

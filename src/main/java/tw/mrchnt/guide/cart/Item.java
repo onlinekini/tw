@@ -1,18 +1,23 @@
-package tw.mrchnt.guide.item;
+package tw.mrchnt.guide.cart;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
-import tw.mrchnt.guide.symbol.Symbols;
+import tw.mrchnt.guide.config.MetaItem;
 
+/**
+ * This class represents the line .. glob glob gold.
+ * where glob glob is within Symbols and gold is the meta item info 
+ *
+ */
 public class Item {
 
 	private MetaItem referenceItem;
 	private Symbols symbols;
 
-
-	public Item(MetaItem itemName, Symbols symbols) {
-		
+	public Item(MetaItem item, Symbols smbls) {
+		referenceItem = item;
+		symbols = smbls;
 	}
 	
 	public MetaItem getReferenceItem() {
@@ -35,5 +40,9 @@ public class Item {
 
 	public void setSymbols(Symbols symbols) {
 		this.symbols = symbols;
+	}
+	
+	public String getTotalItemValue() {
+		return new BigDecimal(symbols.getTotalValue() * referenceItem.getItemUnitPrice()).setScale(0, RoundingMode.DOWN).toString();
 	}
 }

@@ -3,8 +3,8 @@ package tw.mrchnt.guide.rules;
 import java.util.ArrayList;
 import java.util.List;
 
-import tw.mrchnt.guide.config.ItemRef;
-import tw.mrchnt.guide.config.SymbolRef;
+import tw.mrchnt.guide.config.ItemRefCatalogue;
+import tw.mrchnt.guide.config.SymbolRefCatalogue;
 import tw.mrchnt.guide.message.MessageIfc;
 
 public class SingleItemWithCreditRule implements MessageRuleIfc {
@@ -27,9 +27,9 @@ public class SingleItemWithCreditRule implements MessageRuleIfc {
 	public void applyRule(MessageIfc message) {
 		List<String> symbols = new ArrayList<>();
 		for (String possibleSymbolItem : message.getDecomposedMessage()) {
-			if(SymbolRef.getSymbolRef().isSymbol(possibleSymbolItem)) {
+			if(SymbolRefCatalogue.getSymbolCatalogue().isSymbolPresent(possibleSymbolItem)) {
 				symbols.add(possibleSymbolItem);
-			} else if (ItemRef.getItemRef().isItem(possibleSymbolItem)) {
+			} else if (ItemRefCatalogue.getItemRefCatalogue().isItem(possibleSymbolItem)) {
 				
 			}
 		}
@@ -51,7 +51,7 @@ public class SingleItemWithCreditRule implements MessageRuleIfc {
 			return false;
 		}
 		for (String possibleItem : message.getDecomposedMessage()) {
-			if(ItemRef.getItemRef().isItem(possibleItem)) {
+			if(ItemRefCatalogue.getItemRefCatalogue().isItem(possibleItem)) {
 				tempCount++;
 			}
 		}

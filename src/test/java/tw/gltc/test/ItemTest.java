@@ -2,70 +2,70 @@ package tw.gltc.test;
 
 import static org.junit.Assert.assertEquals;
 
-import java.math.BigDecimal;
-
 import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
-import tw.gltc.shpng.dto.Item;
-import tw.gltc.shpng.dto.RequestDTO;
-import tw.gltc.shpng.exception.ComputeException;
-import tw.gltc.shpng.ref.item.ItemFactory;
-import tw.gltc.shpng.ref.item.ItemRefIfc;
-import tw.gltc.shpng.ref.symbol.SymbolFactory;
-import tw.gltc.shpng.ref.symbol.SymbolRefIfc;
-import tw.gltc.shpng.service.ItemValueComputer;
-import tw.gltc.shpng.symbol.RomanToNumConverter;
+import tw.mrchnt.guide.cart.Item;
+import tw.mrchnt.guide.cart.Symbols;
+import tw.mrchnt.guide.config.ComputeException;
+import tw.mrchnt.guide.config.ItemRefCatalogue;
+import tw.mrchnt.guide.config.MetaItem;
+import tw.mrchnt.guide.config.MetaSymbol;
+import tw.mrchnt.guide.config.SymbolRefCatalogue;
+import tw.mrchnt.guide.rules.RomanNumeralRule;
 
-public class ItemValueCompuerTest {
-
-	static ItemValueComputer itemValueComputer;
+public class ItemTest {
 
 	@Rule
 	public ExpectedException exception = ExpectedException.none();
+	
+	private static ItemRefCatalogue itemCatalogue;
+	
+	private static SymbolRefCatalogue symbolRefCatalogue;
 
 	@BeforeClass
 	public static void initAll() {
-		SymbolRefIfc symRef = SymbolFactory.getSymbolsFor(SymbolFactory.GALACTIC_SYMBOL_TYPE);
-		ItemRefIfc itmRef = ItemFactory.getItem(ItemFactory.GALACTIC_ITEM_SRC_NAME);
-		symRef.manualInit("glob", "I");
-		symRef.manualInit("prok", "V");
-		symRef.manualInit("pish", "X");
-		symRef.manualInit("tegj", "L");
-		symRef.manualInit("cfug", "C");
-		symRef.manualInit("dfle", "D");
-		symRef.manualInit("mgng", "M");
 		
-		itmRef.updateItemValue("Gold", new BigDecimal(10));
-		itmRef.updateItemValue("Silver", new BigDecimal(100));
-
-		GalaticToNumric converter = new GalaticToNumric(symRef);
-		itemValueComputer = new ItemValueComputer(converter, itmRef);
-	}
-
-	@Test
-	public void testGetTotalValueWithoutItem() { // Without Item
-		RequestDTO reqDTO = new RequestDTO();
-		reqDTO.setHasItem(false);
-		reqDTO.setOriginalRequest("glob glob");
-		reqDTO.setTotalPrice(new BigDecimal(2));
-		assertEquals(reqDTO, itemValueComputer.getTotalValue("glob glob"));
+		// Symbol catalogue
+		symbolRefCatalogue = SymbolRefCatalogue.getSymbolCatalogue();
+		symbolRefCatalogue.addSymbol(new MetaSymbol("glob", "I"));
+		symbolRefCatalogue.addSymbol(new MetaSymbol("prok", "V"));
+		symbolRefCatalogue.addSymbol(new MetaSymbol("pish", "X"));
+		symbolRefCatalogue.addSymbol(new MetaSymbol("tegj", "L"));
+		symbolRefCatalogue.addSymbol(new MetaSymbol("cfug", "C"));
+		symbolRefCatalogue.addSymbol(new MetaSymbol("dfle", "D"));
+		symbolRefCatalogue.addSymbol(new MetaSymbol("mgng", "M"));
 		
-		reqDTO.setHasItem(false);
-		reqDTO.setOriginalRequest("pish tegj glob  ");
-		reqDTO.setTotalPrice(new BigDecimal(41));
-		assertEquals(reqDTO, itemValueComputer.getTotalValue("pish tegj glob  "));
-		
-		reqDTO.setHasItem(false);
-		reqDTO.setOriginalRequest("pish pish pish glob ");
-		reqDTO.setTotalPrice(new BigDecimal(31));
-		assertEquals(reqDTO, itemValueComputer.getTotalValue("pish pish pish glob "));
-		
+		// Item catalogue
+		itemCatalogue = ItemRefCatalogue.getItemRefCatalogue();
+		itemCatalogue.addItem(new MetaItem("GOLD", 14450.0));
+		itemCatalogue.addItem(new MetaItem("SILVER", 17.0));
+		itemCatalogue.addItem(new MetaItem("IRON", (391.0/2.0)));	
 	}
 	
 	@Test
+	public void testIron() {
+		Item anItem = new Item(itemCatalogue.getItem("IRON"),  new Symbols(new String[] {"prok", "glob"}, new RomanNumeralRule()));
+		assertEquals("782", anItem.getTotalItemValue());
+	}
+	
+	@Test
+	public void testGold() {
+		Item anItem = new Item(itemCatalogue.getItem("GOLD"),  new Symbols(new String[] {"prok", "glob"}, new RomanNumeralRule()));
+		assertEquals("57800", anItem.getTotalItemValue());
+	}
+	
+	@Test
+	public void testSilver() {
+		Item anItem = new Item(itemCatalogue.getItem("SILVER"),  new Symbols(new String[] {"prok", "glob"}, new RomanNumeralRule()));
+		assertEquals("68", anItem.getTotalItemValue());
+	}
+
+	
+	
+	/*@Test
 	public void testGetTotalValueWithItemNeg() { // With item and lots pof spaces before after and middle
 		MessageRuleIfc  itemDTO = new MessageRuleIfc("SILVER", new BigDecimal(17));
 		
@@ -105,6 +105,6 @@ public class ItemValueCompuerTest {
 		reqDTO.setTotalPrice(new BigDecimal(3100));
 		assertEquals(reqDTO, itemValueComputer.getTotalValue("pish pish pish glob Gold Silver "));
 
-	}
+	}*/
 
 }
