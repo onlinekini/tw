@@ -16,35 +16,35 @@
 ## Important Class Names and details
 All IFCs are interfaces. (Generally I dont use IFC, used here for clarity against similar sounding names). 
 ### Processing the input data *package:* `tw.mrchnt.guide.message`:
-	* `Message` - This represents a line from input file (input.test)
-	* `SimpleMessageDecomposer` - Decomposer implementation fed to the Message. This decomposes the messages into message composenents for pasring. it can handle any types word separators like #... etc (currently " " <space>)
-	* `PrepperIfc` implementations are provided just in case the message needs to be prepped before sending for processing, like removing unnecessary characters in the lines. NOT USED CURRENTLY.
+`Message` - This represents a line from input file (input.test)
+`SimpleMessageDecomposer` - Decomposer implementation fed to the Message. This decomposes the messages into message composenents for pasring. it can handle any types word separators like #... etc (currently " " <space>)
+`PrepperIfc` implementations are provided just in case the message needs to be prepped before sending for processing, like removing unnecessary characters in the lines. NOT USED CURRENTLY.
 ### Config and Setup information *package:* `tw.mrchnt.guide.config`:
-	* `MetaItem`: This holds A Meta Item. A META Item is a setup info. Like Iron, Gold etc. Whose unit price can be modified.
-	* `ItemRefCatalog` : This holds a catalogue of META item (s). 
-	* `MetaSymbol` : Holds the Symbol and its Roman and Numeric equivalent value. like hold Glob, its Roman value say I and its numeric value = 1
-	* `SymbolRefCatalog` : Holds a catalogue of META Symbol(s)
+`MetaItem`: This holds A Meta Item. A META Item is a setup info. Like Iron, Gold etc. Whose unit price can be modified.
+`ItemRefCatalog` : This holds a catalogue of META item (s). 
+`MetaSymbol` : Holds the Symbol and its Roman and Numeric equivalent value. like hold Glob, its Roman value say I and its numeric value = 1
+`SymbolRefCatalog` : Holds a catalogue of META Symbol(s)
 ### Making sense of the sentence in the inout data *package:* `tw.mrchnt.guide.cart`:
-	* `Symbols`: Symbols is a group of meta symbols : like Glob glob which is present in the input. 
-  	* `Item` : Cart- Item holds the full message equivalent of an item. Example : glob glob Gold is an Item. Which is Symbols & Item
+`Symbols`: Symbols is a group of meta symbols : like Glob glob which is present in the input. 
+`Item` : Cart- Item holds the full message equivalent of an item. Example : glob glob Gold is an Item. Which is Symbols & Item
 ### Rules for processing Messages *package:* `tw.mrchnt.guide.rules`:
-	* `RomanNumeralRule` implements `NumeralRuleIfc` : Basically has all the rules for Processing roman numerals.
-	### Message processing Rules.
-	* `BaseMessageRules`: Helper class with all basic rules for processing a Message 
-	* `ItemValueAssignmentRule` : Processes the sentence `glob glob Silver is 34 Credits` to assign the value of a META item
-	* `SingleItemWithCreditRule` : Processes the sentence `how many Credits is glob prok Silver ?` or similar sentences. Providing total Credit value
-	* `SymbolValueAssignmentRule` : Processes the sentence `tegj is L` to compute the META symbol value. 
-	* `SymbolWithoutItemRule` : Processes the sentence `how much is pish tegj glob glob ?` . Just computes the value of Symbols provided.
-	* `DummyRule` implemts `MessageRuleIfc` : catch all, when no other rule works. This should ALWAYS BE CHECKED LAST in the list. output: " I dont know what you are talking about" 
-	
-	
+#### Roman Numeral processing
+`RomanNumeralRule` implements `NumeralRuleIfc` : Basically has all the rules for Processing roman numerals.
+_**Note: Currently changeing the Processing from Roman numeral to something else is a code change. Needs enhance ment to make it injectable.**_ 
+#### Message processing Rules.
+`BaseMessageRules`: Helper class with all basic rules for processing a Message 
+`ItemValueAssignmentRule` : Processes the sentence `glob glob Silver is 34 Credits` to assign the value of a META item
+`SingleItemWithCreditRule` : Processes the sentence `how many Credits is glob prok Silver ?` or similar sentences. Providing total Credit value
+`SymbolValueAssignmentRule` : Processes the sentence `tegj is L` to compute the META symbol value. 
+`SymbolWithoutItemRule` : Processes the sentence `how much is pish tegj glob glob ?` . Just computes the value of Symbols provided.
+`DummyRule` implemts `MessageRuleIfc` : catch all, when no other rule works. This should ALWAYS BE CHECKED LAST in the list. output: " I dont know what you are talking about" 
+_**Note: Run this as a list of Rules, first check "canApply" and if yes then apply the rule.**_ 
+
 ## Notations
 Gold, Silver etc are items
 glob, pish etc are symbols; You may add other sysmbols as long as as you provide the roman numeral equivalent
 
-
 ## Assumptions and requirements for the application to run
-## Assumptions 
 * Symbols are single words. 
 * The "glob" would Symbol, glob_phish would be a single symbol, glob glob are two symbols. They cannot be single symbol with a space in between
 * "what", "how", "much", "is", "Credit", "Credits", "?" cannot represent item names
