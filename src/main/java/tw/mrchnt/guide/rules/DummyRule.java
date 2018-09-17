@@ -1,11 +1,5 @@
 package tw.mrchnt.guide.rules;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import tw.mrchnt.guide.config.ItemRefCatalogue;
-import tw.mrchnt.guide.config.MetaSymbol;
-import tw.mrchnt.guide.config.SymbolRefCatalogue;
 import tw.mrchnt.guide.message.MessageIfc;
 
 public class DummyRule implements MessageRuleIfc {

@@ -9,7 +9,6 @@ import org.junit.rules.ExpectedException;
 
 import tw.mrchnt.guide.cart.Item;
 import tw.mrchnt.guide.cart.Symbols;
-import tw.mrchnt.guide.config.ComputeException;
 import tw.mrchnt.guide.config.ItemRefCatalogue;
 import tw.mrchnt.guide.config.MetaItem;
 import tw.mrchnt.guide.config.MetaSymbol;
