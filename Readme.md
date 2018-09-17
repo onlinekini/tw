@@ -6,6 +6,7 @@
 * Input to the application is from input.test 
 * Program is Case agnostic. is NOT case sensitive.
 * Any Change in sentence will need a new Message processing rule (check section : *Important Class Names and Details* for more info on rules) 
+All classes ending with *IFC* are interfaces. (Generally I dont use IFC, used here for clarity against similar sounding names). 
 
 # Details
  
@@ -14,23 +15,34 @@
 * `setup.properties` : This is the config setup for the application. Do not modify anything unless you know what you are doing. Wrong config will cause the program to fail
 
 ## Important Class Names and details
-All IFCs are interfaces. (Generally I dont use IFC, used here for clarity against similar sounding names). 
-### Processing the input data *package:* `tw.mrchnt.guide.message`:
+
+### Processing the input data 
+ *package:*`tw.mrchnt.guide.message`:
 `Message` - This represents a line from input file (input.test)
 `SimpleMessageDecomposer` - Decomposer implementation fed to the Message. This decomposes the messages into message composenents for pasring. it can handle any types word separators like #... etc (currently " " <space>)
 `PrepperIfc` implementations are provided just in case the message needs to be prepped before sending for processing, like removing unnecessary characters in the lines. NOT USED CURRENTLY.
-### Config and Setup information *package:* `tw.mrchnt.guide.config`:
+	
+### Config and Setup information 
+*package:*`tw.mrchnt.guide.config`:
+
 `MetaItem`: This holds A Meta Item. A META Item is a setup info. Like Iron, Gold etc. Whose unit price can be modified.
 `ItemRefCatalog` : This holds a catalogue of META item (s). 
 `MetaSymbol` : Holds the Symbol and its Roman and Numeric equivalent value. like hold Glob, its Roman value say I and its numeric value = 1
 `SymbolRefCatalog` : Holds a catalogue of META Symbol(s)
-### Making sense of the sentence in the inout data *package:* `tw.mrchnt.guide.cart`:
+
+### Making sense of the sentence in the inout data *package:* 
+ *package:*`tw.mrchnt.guide.cart`:
+ 
 `Symbols`: Symbols is a group of meta symbols : like Glob glob which is present in the input. 
 `Item` : Cart- Item holds the full message equivalent of an item. Example : glob glob Gold is an Item. Which is Symbols & Item
-### Rules for processing Messages *package:* `tw.mrchnt.guide.rules`:
+
+### Rules for processing Messages
+ *package:*`tw.mrchnt.guide.rules`:
+
 #### Roman Numeral processing
 `RomanNumeralRule` implements `NumeralRuleIfc` : Basically has all the rules for Processing roman numerals.
-_**Note: Currently changeing the Processing from Roman numeral to something else is a code change. Needs enhance ment to make it injectable.**_ 
+_**Note: Currently changing the Processing from Roman numeral to something else is a code change. Needs enhancement to make it injectable.**_
+
 #### Message processing Rules.
 `BaseMessageRules`: Helper class with all basic rules for processing a Message 
 `ItemValueAssignmentRule` : Processes the sentence `glob glob Silver is 34 Credits` to assign the value of a META item
