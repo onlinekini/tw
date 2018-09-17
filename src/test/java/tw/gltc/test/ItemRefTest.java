@@ -35,7 +35,7 @@ public class ItemRefTest {
 	@Test
 	public void addAndTest() {
 		itmRef.addItem(new MetaItem("GOLFBALLS", 20.0));
-		assertTrue(itmRef.isItem("GOLFBALLS"));
+		assertFalse(itmRef.isItem("GOLFBALLS")); // The item should be configured before adding.
 	}
 	
 	@Test

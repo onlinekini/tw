@@ -6,7 +6,7 @@ import java.math.RoundingMode;
 import tw.mrchnt.guide.config.MetaItem;
 
 /**
- * This class represents the line .. glob glob gold.
+ * This class represents the line .. "glob glob gold".
  * where glob glob is within Symbols and gold is the meta item info 
  *
  */

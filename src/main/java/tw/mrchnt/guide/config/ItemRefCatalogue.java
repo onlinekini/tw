@@ -27,12 +27,8 @@ public class ItemRefCatalogue {
 		return itemCatalogue;
 	}
 	
-	public void addItems(List<MetaItem> itemRefs) {
-		itemsMap.putAll(itemRefs.stream().collect(Collectors.toMap(MetaItem::getItemName, Function.identity())));
-	}
-
 	public void addItem(MetaItem itemRef) {
-		itemsMap.put(itemRef.getItemName(), itemRef);
+		itemsMap.put(itemRef.getItemName().toLowerCase(), itemRef);
 	}
 
 	public boolean isItem(String inputStr) {
